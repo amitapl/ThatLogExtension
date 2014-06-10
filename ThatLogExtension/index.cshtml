@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width" />
         <title>That Log Browser</title>
         <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
-        <link rel="stylesheet" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css" type="text/css" />
+        <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
         <link href="Content/css/thatlog.css" rel="stylesheet" />
     </head>
     <body>
@@ -24,7 +24,6 @@
             <table class="table table-striped" id="logBrowser" cellspacing="0" width="100%">
                 <thead>
                     <tr>
-                        <th></th>
                         <th>Log File / Directory</th>
                         <th>Size</th>
                     </tr>
@@ -32,12 +31,10 @@
             </table>
         </div>
 
-        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="Content/js/jquery-1.10.1.min.js"></script>
         <script src="Content/js/bootstrap.js"></script>
-        <script src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+        <script src="Content/js/jquery.dataTables.js"></script>
         <script>
-            String.prototype.rtrim = function () { return this.replace(/\s+$/, ''); };
-
             var firstUrl = null;
 
             window.onpopstate = function(evt) {
@@ -74,12 +71,10 @@
                         if (item.IsDirectory) {
                             var icon1 = '<i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
                             var onclickurl = item.Name !== '..' ? 'onclick="refresh(\'' + item.Url + '\');"' : 'onclick="goBack();"';
-                            item.name = '<div id="directoryLink" class="pointer" ' + onclickurl + '>' + icon1 + item.Name + '</div>';
-                            item.downloadUrl = null;
+                            item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</div>';
                         } else {
                             var icon2 = '<i class="glyphicon glyphicon-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            item.downloadUrl = '<a href="' + item.DownloadUrl + '" class="btn btn-sm btn-default"><i class="glyphicon glyphicon-download"></i></a>';
-                            item.name = icon2 + item.Name;
+                            item.name = icon2 + '<a href="' + item.DownloadUrl + '" >' + item.Name + '</a>';
                         }
                     });
                     $('#logBrowser').dataTable({
@@ -90,7 +85,6 @@
                         "searching": false,
                         "order": [ 1, 'asc' ],
                         "columns": [
-                            { "data": "downloadUrl", "width": "40px" },
                             { "data": "name" },
                             { "data": "Size" }
                         ]

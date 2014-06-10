@@ -49,7 +49,7 @@ namespace ThatLogExtensions.Models
                         IsDirectory = file.Attributes.HasFlag(System.IO.FileAttributes.Directory),
                         Name = file.Name,
                         Url = baseAddress + "/" + file.Name,
-                        DownloadUrl = baseAddress + "/" + file.Name + "&download=true",
+                        DownloadUrl = baseAddress + "/" + file.Name + "&download=true"
                     };
 
                     var fileInfoBase = file as FileInfoBase;

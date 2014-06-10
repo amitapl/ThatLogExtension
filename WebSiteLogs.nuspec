@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>websitelogs</id>
+    <title>Azure Web Site Logs Browser</title>
+    <version>1.0.5</version>
+    <authors>Amit Apple</authors>
+    <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
+    <projectUrl>https://github.com/amitapl/ThatLogExtension</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Site extension to allow viewing of log files both on file system and on Azure blob storage.</description>
+    <tags>logs siteextension</tags>
+  </metadata>
+  <files>
+    <file src="artifacts\**\*.*" target="content" />
+  </files>
+</package>

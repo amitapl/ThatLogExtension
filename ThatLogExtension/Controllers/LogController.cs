@@ -17,8 +17,8 @@ namespace ThatLogExtensions.Controllers
 
         static LogController()
         {
-            LogBrowsers.Add("filesystem", new FileSystemLogBrowser("File System", "c:\\temp"));
-            // LogBrowsers.Add("filesystem", new FileSystemLogBrowser(Environment.ExpandEnvironmentVariables("%HOME%") + "\\LogFiles"));
+            // LogBrowsers.Add("filesystem", new FileSystemLogBrowser("File System", "c:\\temp"));
+            LogBrowsers.Add("filesystem", new FileSystemLogBrowser("File System", Environment.ExpandEnvironmentVariables("%HOME%") + "\\LogFiles"));
 
             var sasUrl = ConfigurationManager.AppSettings["DIAGNOSTICS_AZUREBLOBCONTAINERSASURL"];
             if (sasUrl != null)
@@ -61,9 +61,9 @@ namespace ThatLogExtensions.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Download(string path, bool download)
+        public HttpResponseMessage Download(string type, string path, bool download)
         {
-            path = Path.Combine("c:\\", path).Replace('/', '\\');
+            path = Path.Combine(Environment.ExpandEnvironmentVariables("%HOME%") + "\\LogFiles", path.Trim('/')).Replace('/', '\\');
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new FileStream(path, FileMode.Open);
             result.Content = new StreamContent(stream);
