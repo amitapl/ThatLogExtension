@@ -37,8 +37,10 @@
         <script>
             var firstUrl = null;
 
-            window.onpopstate = function(evt) {
-                refresh(evt.state.refreshUrl, true);
+            window.onpopstate = function (evt) {
+                if (evt.state) {
+                    refresh(evt.state.refreshUrl, true);
+                }
             };
 
             function goBack() {
@@ -47,12 +49,14 @@
 
             function refresh(refreshUrl, historyCall) {
                 if (!historyCall) {
+                    var stateObj = { refreshUrl: refreshUrl };
+
                     if (!firstUrl) {
                         firstUrl = refreshUrl;
+                        history.replaceState(stateObj, null, null);
+                    } else {
+                        history.pushState(stateObj, null, null);
                     }
-
-                    var stateObj = { refreshUrl: refreshUrl };
-                    history.pushState(stateObj, null, null);
                 }
 
                 $.get(refreshUrl, function (data) {
