@@ -8,14 +8,15 @@ namespace ThatLogExtensions.Models
     public class FileSystemLogBrowser : LogBrowser
     {
         private readonly FileSystem _fileSystem;
-        private readonly string _rootPath;
 
         public FileSystemLogBrowser(string name, string rootPath)
             : base(name)
         {
             _fileSystem = new FileSystem();
-            _rootPath = rootPath;
+            RootPath = rootPath;
         }
+
+        public string RootPath { get; private set; }
 
         public override LogItem GetLogItem(string baseAddress, string path)
         {
@@ -25,7 +26,7 @@ namespace ThatLogExtensions.Models
             }
             path = path.TrimStart('/');
 
-            string windowsPath = Path.GetFullPath(Path.Combine(_rootPath, path.Replace('/', '\\')));
+            string windowsPath = Path.GetFullPath(Path.Combine(RootPath, path.Replace('/', '\\')));
 
             if (_fileSystem.Directory.Exists(windowsPath))
             {

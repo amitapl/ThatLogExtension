@@ -17,19 +17,32 @@ namespace ThatLogExtensions.Controllers
 
         static LogController()
         {
-            // LogBrowsers.Add("filesystem", new FileSystemLogBrowser("File System", "c:\\temp"));
-            LogBrowsers.Add("filesystem", new FileSystemLogBrowser("File System", Environment.ExpandEnvironmentVariables("%HOME%") + "\\LogFiles"));
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "c:\\temp", "filesystemtemp", "File System - Temp");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Application", "filesystem", "File System - Application Logs");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\http\\RawLogs", "filesystem", "File System - HTTP Logs");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Git\\trace", "filesystem", "File System - Kudu Logs");
 
-            var sasUrl = ConfigurationManager.AppSettings["DIAGNOSTICS_AZUREBLOBCONTAINERSASURL"];
+            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
+            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
+        }
+
+        private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName)
+        {
+            var sasUrl = ConfigurationManager.AppSettings[environmentVariableKey];
             if (sasUrl != null)
             {
-                LogBrowsers.Add("blobapplication", new StorageLogBrowser("Application Logs - Blob Storage", sasUrl));
+                logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, sasUrl));
             }
+        }
 
-            sasUrl = ConfigurationManager.AppSettings["WEBSITE_HTTPLOGGING_CONTAINER_URL"];
-            if (sasUrl != null)
+        private static void AddFileSystemLogBrowserBasedOnExistance(Dictionary<string, ILogBrowser> logBrowsers, string fileSystemPath, string logBrowserKey, string logBrowserName)
+        {
+            fileSystemPath = Path.Combine(Environment.ExpandEnvironmentVariables("%HOME%"), fileSystemPath);
+
+            if (Directory.Exists(fileSystemPath))
             {
-                LogBrowsers.Add("blobhttp", new StorageLogBrowser("HTTP Logs - Blob Storage", sasUrl));
+                logBrowsers.Add(logBrowserKey, new FileSystemLogBrowser(logBrowserName, fileSystemPath));
             }
         }
 
@@ -63,7 +76,13 @@ namespace ThatLogExtensions.Controllers
         [HttpGet]
         public HttpResponseMessage Download(string type, string path, bool download)
         {
-            path = Path.Combine(Environment.ExpandEnvironmentVariables("%HOME%") + "\\LogFiles", path.Trim('/')).Replace('/', '\\');
+            ILogBrowser logBrowser;
+            if (!LogBrowsers.TryGetValue(type, out logBrowser))
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound);
+            }
+
+            path = Path.Combine(((FileSystemLogBrowser)logBrowser).RootPath, path.Trim('/')).Replace('/', '\\');
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             var stream = new FileStream(path, FileMode.Open);
             result.Content = new StreamContent(stream);
