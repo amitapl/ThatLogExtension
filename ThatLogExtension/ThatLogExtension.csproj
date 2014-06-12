@@ -128,6 +128,8 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\css\prism.css" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.css" />
@@ -135,6 +137,7 @@
     <Content Include="Content\css\jquery.dataTables.css" />
     <Content Include="Content\css\thatlog.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\js\prism.min.js" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\jquery-1.10.1.min.js" />
@@ -165,6 +168,8 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="applicationHost.xdt" />
+    <Content Include="viewlog.cshtml" />
+    <None Include="Properties\PublishProfiles\antdemo.pubxml" />
     <None Include="Properties\PublishProfiles\checkkudu - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\checkkudu - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">

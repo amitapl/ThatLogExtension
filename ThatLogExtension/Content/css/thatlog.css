@@ -1,10 +1,32 @@
-﻿body {
-    margin-top: 100px;
+﻿html {
+    height: 100%;
+    min-height: 100%;
+}
+
+body {
+    height: 100%;
+    min-height: 100%;
 }
 
 .pointer {
     cursor: pointer;
     color: black;
+}
+
+.container {
+    height: 100%;
+    min-height: 100%;
+}
+
+.line-numbers {
+    word-wrap: normal;
+    height: calc(100% - 120px); /* IE9+ and future browsers */
+    height: -moz-calc(100% - 120px); /* Firefox */
+    height: -webkit-calc(100% - 120px); /* Chrome, Safari */
+}
+
+.header {
+    height: 100px;
 }
 
 a:link {

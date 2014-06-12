@@ -19,11 +19,13 @@
                     <a href="~/"><h1 class="navbar-brand">Azure Web Site Log Browser</h1></a>
                 </div>
             </div>
+            <div class="header"></div>
             <h3 id="currentRoot"></h3>
             <h4 id="currentPath"></h4>
             <table class="table table-striped" id="logBrowser" cellspacing="0" width="100%">
                 <thead>
                     <tr>
+                        <th></th>
                         <th>Log File / Directory</th>
                         <th>Size</th>
                     </tr>
@@ -76,9 +78,11 @@
                             var icon1 = '<i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
                             var onclickurl = item.Name !== '..' ? 'onclick="refresh(\'' + item.Url + '\');"' : 'onclick="goBack();"';
                             item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</div>';
+                            item.downloadUrl = null;
                         } else {
                             var icon2 = '<i class="glyphicon glyphicon-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            item.name = icon2 + '<a href="' + item.DownloadUrl + '" >' + item.Name + '</a>';
+                            item.name = icon2 + '<a href="' + item.DownloadUrl.replace('api/log', 'viewlog.cshtml') + '" >' + item.Name + '</a>';
+                            item.downloadUrl = '<a href="' + item.DownloadUrl + '"><i class="glyphicon glyphicon-download-alt"></i></a>';
                         }
                     });
                     $('#logBrowser').dataTable({
@@ -89,6 +93,10 @@
                         "searching": false,
                         "order": [ 1, 'asc' ],
                         "columns": [
+                            {
+                                "width": "20px",
+                                "data": "downloadUrl"
+                            },
                             { "data": "name" },
                             { "data": "Size" }
                         ]

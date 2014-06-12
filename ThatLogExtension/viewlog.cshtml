@@ -1,0 +1,43 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Azure Web Site Log Browser</title>
+        <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
+        <link href="Content/css/prism.css" rel="stylesheet" />
+        <link href="Content/css/thatlog.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="header"></div>
+            <div class="navbar navbar-default navbar-fixed-top">
+                <div class="navbar-nav">
+                    <a href="~/"><h1 class="navbar-brand">Azure Web Site Log Browser</h1></a>
+                </div>
+            </div>
+            <pre class="line-numbers"><code class="language-markup" id="filecontent"></code></pre>
+            <img src="Content/ajax-loader.gif" id="loading-indicator" style="text-align: center" />
+        </div>
+
+        <script src="Content/js/jquery-1.10.1.min.js"></script>
+        <script src="Content/js/bootstrap.js"></script>
+        <script src="Content/js/jquery.dataTables.js"></script>
+        <script src="Content/js/prism.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                var url = 'api/log' + window.location.search;
+                $.get(url, function (data) {
+                    $("#filecontent").text(data);
+                    Prism.highlightAll();
+                    $('#loading-indicator').hide();
+                });
+            });
+        </script>
+    </body>
+</html>
