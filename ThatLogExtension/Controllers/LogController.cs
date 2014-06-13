@@ -20,6 +20,7 @@ namespace ThatLogExtensions.Controllers
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "c:\\temp", "filesystemtemp", "File System - Temp");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Application", "filesystemapplication", "File System - Application Logs");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\http\\RawLogs", "filesystemhttp", "File System - HTTP Logs");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\DetailedErrors", "detailederrors", "IIS Detailed Errors");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Git\\trace", "filesystemkudu", "File System - Kudu Logs");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
 
