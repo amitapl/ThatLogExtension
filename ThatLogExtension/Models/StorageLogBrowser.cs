@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
+using ThatLogExtension.Models;
 
 namespace ThatLogExtensions.Models
 {
@@ -61,7 +64,7 @@ namespace ThatLogExtensions.Models
                             Size = cloudBlockBlob.Properties.Length,
                             Path = path + innerName,
                             Url = baseAddress + innerName,
-                            DownloadUrl = blob.Uri + _sas
+                            DownloadUrl = baseAddress + innerName + "&download=true"
                         });
                     }
                     else if (blob is CloudBlobDirectory)
@@ -96,6 +99,22 @@ namespace ThatLogExtensions.Models
             }
 
             return null;
+        }
+
+        public override async Task<Stream> GetStreamForDownloadAsync(string path)
+        {
+            if (String.IsNullOrWhiteSpace(path))
+            {
+                path = String.Empty;
+            }
+
+            path = path.TrimStart('/');
+
+            var blobContainer = new CloudBlobContainer(new Uri(_sasUrl));
+            var blockBlobReference = blobContainer.GetBlockBlobReference(path);
+
+            var httpClient = new HttpClient();
+            return await httpClient.GetStreamAsync(blockBlobReference.Uri + _sas);
         }
     }
 }

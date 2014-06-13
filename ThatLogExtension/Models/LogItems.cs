@@ -1,6 +1,7 @@
 using System.Collections.Generic;
+using ThatLogExtensions.Models;
 
-namespace ThatLogExtensions.Models
+namespace ThatLogExtension.Models
 {
     public class LogItems : LogItem
     {

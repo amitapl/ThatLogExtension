@@ -3,7 +3,7 @@
   <metadata>
     <id>websitelogs</id>
     <title>Azure Web Site Logs Browser</title>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
     <authors>Amit Apple</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/amitapl/ThatLogExtension</projectUrl>

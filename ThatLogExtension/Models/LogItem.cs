@@ -1,4 +1,4 @@
-﻿namespace ThatLogExtensions.Models
+﻿namespace ThatLogExtension.Models
 {
     public class LogItem
     {

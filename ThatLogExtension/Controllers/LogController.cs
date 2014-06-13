@@ -6,10 +6,12 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web.Http;
+using ThatLogExtension.Models;
 using ThatLogExtensions.Models;
 
-namespace ThatLogExtensions.Controllers
+namespace ThatLogExtension.Controllers
 {
     public class LogController : ApiController
     {
@@ -75,7 +77,7 @@ namespace ThatLogExtensions.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage Download(string type, string path, bool download)
+        public async Task<HttpResponseMessage> Download(string type, string path, bool download)
         {
             ILogBrowser logBrowser;
             if (!LogBrowsers.TryGetValue(type, out logBrowser))
@@ -83,13 +85,16 @@ namespace ThatLogExtensions.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            path = Path.Combine(((FileSystemLogBrowser)logBrowser).RootPath, path.Trim('/')).Replace('/', '\\');
+            Stream stream = await logBrowser.GetStreamForDownloadAsync(path);
+
             var result = new HttpResponseMessage(HttpStatusCode.OK);
-            var stream = new FileStream(path, FileMode.Open);
             result.Content = new StreamContent(stream);
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
-            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-            result.Content.Headers.ContentDisposition.FileName = Path.GetFileName(path);
+            result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = Path.GetFileName(path)
+            };
+
             return result;
         }
     }

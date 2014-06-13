@@ -36,6 +36,7 @@
         <script src="Content/js/jquery-1.10.1.min.js"></script>
         <script src="Content/js/bootstrap.js"></script>
         <script src="Content/js/jquery.dataTables.js"></script>
+        <script src="Content/js/thatlogextension.js"></script>
         <script>
             var firstUrl = null;
 
@@ -44,10 +45,6 @@
                     refresh(evt.state.refreshUrl, true);
                 }
             };
-
-            function goBack() {
-                history.go(-1);
-            }
 
             function refresh(refreshUrl, historyCall) {
                 if (!historyCall) {
@@ -81,7 +78,7 @@
                             item.downloadUrl = null;
                         } else {
                             var icon2 = '<i class="glyphicon glyphicon-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            item.name = icon2 + '<a href="' + item.DownloadUrl.replace('api/log', 'viewlog.cshtml') + '" >' + item.Name + '</a>';
+                            item.name = icon2 + '<a href="viewlog.cshtml?url=' + encodeURIComponent(item.DownloadUrl) + '" >' + item.Name + '</a>';
                             item.downloadUrl = '<a href="' + item.DownloadUrl + '"><i class="glyphicon glyphicon-download-alt"></i></a>';
                         }
                     });

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
+using System.Threading.Tasks;
 
-namespace ThatLogExtensions.Models
+namespace ThatLogExtension.Models
 {
     public class FileSystemLogBrowser : LogBrowser
     {
@@ -80,6 +81,12 @@ namespace ThatLogExtensions.Models
             }
 
             return null;
+        }
+
+        public override async Task<Stream> GetStreamForDownloadAsync(string path)
+        {
+            path = Path.Combine(RootPath, path.Trim('/')).Replace('/', '\\');
+            return new FileStream(path, FileMode.Open);
         }
     }
 }

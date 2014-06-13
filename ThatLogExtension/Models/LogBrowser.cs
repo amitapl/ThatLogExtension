@@ -1,4 +1,7 @@
-﻿namespace ThatLogExtensions.Models
+﻿using System.IO;
+using System.Threading.Tasks;
+
+namespace ThatLogExtension.Models
 {
     public abstract class LogBrowser : ILogBrowser
     {
@@ -8,6 +11,8 @@
         }
 
         public abstract LogItem GetLogItem(string baseAddress, string path);
+
+        public abstract Task<Stream> GetStreamForDownloadAsync(string path);
 
         public string Name { get; private set; }
     }
