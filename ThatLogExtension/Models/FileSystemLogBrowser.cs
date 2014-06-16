@@ -50,6 +50,7 @@ namespace ThatLogExtension.Models
                         Path = Path.Combine(windowsPath, file.Name),
                         IsDirectory = file.Attributes.HasFlag(System.IO.FileAttributes.Directory),
                         Name = file.Name,
+                        Date = file.LastWriteTimeUtc,
                         Url = baseAddress + "/" + file.Name,
                         DownloadUrl = baseAddress + "/" + file.Name + "&download=true"
                     };
@@ -75,6 +76,7 @@ namespace ThatLogExtension.Models
                     IsDirectory = false,
                     Name = Path.GetFileName(windowsPath),
                     Size = fileInfo.Length,
+                    Date = fileInfo.LastWriteTimeUtc,
                     Url = baseAddress,
                     DownloadUrl = baseAddress + "&download=true"
                 };

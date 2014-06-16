@@ -1,4 +1,6 @@
-﻿namespace ThatLogExtension.Models
+﻿using System;
+
+namespace ThatLogExtension.Models
 {
     public class LogItem
     {
@@ -7,6 +9,8 @@
         public string Path { get; set; }
 
         public long Size { get; set; }
+
+        public DateTime? Date { get; set; }
 
         public bool IsDirectory { get; set; }
 

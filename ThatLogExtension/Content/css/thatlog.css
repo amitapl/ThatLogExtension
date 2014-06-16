@@ -44,6 +44,14 @@ body {
     padding: 1px;
 }
 
+.yellow {
+    color: black;
+}
+
+.sorting, .sorting_asc, .sorting_desc {
+    background: none;
+}
+
 a:link {
     color: black;
 }

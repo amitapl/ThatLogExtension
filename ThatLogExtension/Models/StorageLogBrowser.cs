@@ -63,6 +63,7 @@ namespace ThatLogExtensions.Models
                             Name = innerName,
                             Size = cloudBlockBlob.Properties.Length,
                             Path = path + innerName,
+                            Date = cloudBlockBlob.Properties.LastModified.HasValue ? (DateTime?)cloudBlockBlob.Properties.LastModified.Value.DateTime : null,
                             Url = baseAddress + innerName,
                             DownloadUrl = baseAddress + innerName + "&download=true"
                         });
@@ -93,6 +94,7 @@ namespace ThatLogExtensions.Models
                     Name = name,
                     Size = blockBlobReference.Properties.Length,
                     Path = path,
+                    Date = blockBlobReference.Properties.LastModified.HasValue ? (DateTime?)blockBlobReference.Properties.LastModified.Value.DateTime : null,
                     Url = baseAddress,
                     DownloadUrl = blockBlobReference.Uri + _sas
                 };

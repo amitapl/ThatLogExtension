@@ -26,7 +26,9 @@
                 <thead>
                     <tr>
                         <th></th>
+                        <th></th>
                         <th>Log File / Directory</th>
+                        <th>Date</th>
                         <th>Size</th>
                     </tr>
                 </thead>
@@ -36,6 +38,7 @@
         <script src="Content/js/jquery-1.10.1.min.js"></script>
         <script src="Content/js/bootstrap.js"></script>
         <script src="Content/js/jquery.dataTables.js"></script>
+        <script src="Content/js/moment.min.js"></script>
         <script src="Content/js/thatlogextension.js"></script>
         <script>
             var firstUrl = null;
@@ -63,21 +66,21 @@
                     $("#currentPath").html(data.Path);
 
                     var items = data.Items;
-                    items.sort(function(a, b) {
-                        return a.IsDirectory === b.IsDirectory ? 0 : b.IsDirectory ? 1 : -1;
-                    });
+
                     if (firstUrl != refreshUrl) {
-                        items.unshift({ Name: "..", IsDirectory: true, Size: null });
+                        items.unshift({ Name: "..", Date: new Date( 100000000*86400000), IsDirectory: true, Size: null });
                     }
 
                     items.forEach(function (item) {
+                        item.Date = item.Date || null;
+                        item.date = item.Name !== ".." && item.Date ? moment(item.Date).format('lll') : null;
                         if (item.IsDirectory) {
-                            var icon1 = '<i class="glyphicon glyphicon-folder-close"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            var icon1 = '<i class="glyphicon glyphicon-folder-open yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
                             var onclickurl = item.Name !== '..' ? 'onclick="refresh(\'' + item.Url + '\');"' : 'onclick="goBack();"';
                             item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</div>';
                             item.downloadUrl = null;
                         } else {
-                            var icon2 = '<i class="glyphicon glyphicon-file"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
+                            var icon2 = '<i class="glyphicon glyphicon-file yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
                             item.name = icon2 + '<a href="viewlog.cshtml?url=' + encodeURIComponent(item.DownloadUrl) + '" >' + item.Name + '</a>';
                             item.downloadUrl = '<a href="' + item.DownloadUrl + '"><i class="glyphicon glyphicon-download-alt"></i></a>';
                         }
@@ -86,16 +89,30 @@
                         "destroy": "true",
                         "data": items,
                         "paging": false,
-                        "ordering": false,
                         "searching": false,
-                        "order": [ 1, 'asc' ],
+                        "orderFixed": [[ 0, 'asc' ], [1, 'desc']],
                         "columns": [
                             {
                                 "width": "20px",
-                                "data": "downloadUrl"
+                                "data": "downloadUrl",
+                                "orderable": false
                             },
-                            { "data": "name" },
-                            { "data": "Size" }
+                            {
+                                "data": "Date",
+                                "visible": false
+                            },
+                            {
+                                "data": "name",
+                                "orderable": false
+                            },
+                            {
+                                "data": "date",
+                                "orderable": false
+                            },
+                            {
+                                "data": "Size",
+                                "orderable": false
+                            }
                         ]
                     });
                 }, "json");
