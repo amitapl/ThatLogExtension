@@ -142,7 +142,7 @@
                 $('#reportrange').daterangepicker(
                     {
                         ranges: {
-                            'Today': [moment().minute(0).hour(0), moment().minute(0)],
+                            'Today': [moment().minute(0).hour(0), moment().add('hours', 1).minute(0)],
                             'Yesterday': [moment().subtract('days', 2).minute(0).hour(0), moment().subtract('days', 1).minute(0).hour(0)],
                             'Last 7 Days': [moment().subtract('days', 6).minute(0).hour(0), moment().minute(0)],
                             'Last 30 Days': [moment().subtract('days', 29).minute(0).hour(0), moment().minute(0)],
@@ -157,7 +157,7 @@
                     updateDateRange
                 );
 
-                updateDateRange(moment().minute(0).hour(0), moment().minute(0));
+                updateDateRange(moment().minute(0).hour(0), moment().add('hours', 1).minute(0));
             });
         </script>
     </body>
