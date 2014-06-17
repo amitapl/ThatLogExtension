@@ -23,7 +23,7 @@ namespace ThatLogExtension.Models
 
         public override string BuildExternalUrl()
         {
-            return "/viewtable.cshtml";
+            return "viewtable.cshtml";
         }
     }
 }
