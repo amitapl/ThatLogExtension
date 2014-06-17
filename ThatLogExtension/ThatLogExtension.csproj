@@ -129,6 +129,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\css\daterangepicker-bs3.css" />
     <Content Include="Content\css\prism.css" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
@@ -142,6 +143,7 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\js\daterangepicker.js" />
     <Content Include="Content\js\moment.min.js" />
     <Content Include="Content\js\prism.min.js" />
     <Content Include="Content\js\bootstrap.js" />
@@ -154,6 +156,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Models\EventEntity.cs" />
+    <Compile Include="Controllers\LogTableController.cs" />
     <Compile Include="Controllers\LogController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -164,6 +168,7 @@
     <Compile Include="Models\StorageLogBrowser.cs" />
     <Compile Include="Models\LogItem.cs" />
     <Compile Include="Models\LogItems.cs" />
+    <Compile Include="Models\TableStorageLogBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +181,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="applicationHost.xdt" />
     <Content Include="viewlog.cshtml" />
+    <Content Include="viewtable.cshtml" />
     <None Include="Properties\PublishProfiles\antdemo.pubxml" />
     <None Include="Properties\PublishProfiles\checkkudu - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\checkkudu - Web Deploy.pubxml" />

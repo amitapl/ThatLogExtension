@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Http;
 
-namespace ThatLogExtensions
+namespace ThatLogExtension
 {
     public static class WebApiConfig
     {

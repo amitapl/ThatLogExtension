@@ -16,7 +16,7 @@ body {
 .container {
     height: 100%;
     min-height: 100%;
-    width: 100%;
+    width: 96%;
 }
 
 .line-numbers {
@@ -48,8 +48,20 @@ body {
     color: black;
 }
 
+.blue {
+    color: darkblue;
+}
+
+.bold {
+    font-weight: bold;
+}
+
 .sorting, .sorting_asc, .sorting_desc {
     background: none;
+}
+
+#logBrowser_wrapper {
+    margin-bottom: 20px;
 }
 
 a:link {

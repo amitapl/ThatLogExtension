@@ -17,5 +17,7 @@ namespace ThatLogExtension.Models
         public string Url { get; set; }
 
         public string DownloadUrl { get; set; }
+
+        public string ExternalUrl { get; set; }
     }
 }

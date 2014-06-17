@@ -1,6 +1,6 @@
 ﻿using System.Web.Http;
 
-namespace ThatLogExtensions
+namespace ThatLogExtension
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

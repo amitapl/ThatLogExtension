@@ -73,11 +73,15 @@
 
                     items.forEach(function (item) {
                         item.Date = item.Date || null;
-                        item.date = item.Name !== ".." && item.Date ? moment(item.Date).format('lll') : null;
+                        item.date = item.Name !== ".." && item.Date ? moment(item.Date).format('L LT') : null;
                         if (item.IsDirectory) {
                             var icon1 = '<i class="glyphicon glyphicon-folder-open yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
                             var onclickurl = item.Name !== '..' ? 'onclick="refresh(\'' + item.Url + '\');"' : 'onclick="goBack();"';
-                            item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</div>';
+                            if (item.ExternalUrl) {
+                                item.name = icon1 + '<a id="directoryLink" class="pointer" href="' + item.ExternalUrl + '">' + item.Name + '</a>';
+                            } else {
+                                item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</a>';
+                            }
                             item.downloadUrl = null;
                         } else {
                             var icon2 = '<i class="glyphicon glyphicon-file yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';

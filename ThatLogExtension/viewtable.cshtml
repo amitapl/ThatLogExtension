@@ -1,0 +1,164 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width" />
+        <title>Azure Web Site Log Browser</title>
+        <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
+        <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
+        <link href="Content/css/daterangepicker-bs3.css" rel="stylesheet" />
+        <link href="Content/css/thatlog.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="navbar navbar-default navbar-fixed-top">
+                <div class="navbar-nav">
+                    <a href="~/"><h1 class="navbar-brand">Azure Web Site Log Browser</h1></a>
+                </div>
+            </div>
+            <div class="header"></div>
+            <div class="row">
+                <h4>
+                    <span class="bold">View Logs From Azure Table Storage</span>
+                    <div id="reportrange" class="pull-right" style="margin-bottom: 40px">
+                        <i class="glyphicon glyphicon-calendar"></i>
+                        <span></span><b class="caret"></b>
+                    </div>
+                </h4>
+            </div>
+            <table class="table table-striped" id="logBrowser" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Level</th>
+                        <th>RowKey</th>
+                        <th>Instance</th>
+                        <th>Activity</th>
+                        <th>Message</th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+            <button class="btn btn-primary" style="margin:20px" id="loadMore">Load More</button>
+        </div>
+
+        <script src="Content/js/jquery-1.10.1.min.js"></script>
+        <script src="Content/js/bootstrap.js"></script>
+        <script src="Content/js/jquery.dataTables.js"></script>
+        <script src="Content/js/moment.min.js"></script>
+        <script src="Content/js/daterangepicker.js"></script>
+        <script src="Content/js/thatlogextension.js"></script>
+        <script>
+            var currentUrl;
+            var currentData;
+            var currentItems;
+
+            function refresh(refreshUrl, isLoadMore) {
+                if (isLoadMore) {
+                    refreshUrl = currentUrl + '&token=' + currentData.Token;
+                } else {
+                    currentUrl = refreshUrl;
+                }
+
+                $.get(refreshUrl, function (data) {
+                    currentData = data;
+                    var items = data.Items;
+
+                    items.forEach(function (item) {
+                        item.date = '<div class="bold">' + moment(item.Timestamp).format('L LT') + '</div>';
+
+                        var levelLabel;
+                        if (item.Level === 'Information') {
+                            levelLabel = 'info';
+                        } else if (item.Level === 'Warning') {
+                            levelLabel = 'warning';
+                        } else if (item.Level === 'Error') {
+                            levelLabel = 'danger';
+                        } else if (item.Level === 'Critical') {
+                            levelLabel = 'danger';
+                        } else {
+                            levelLabel = 'default';
+                        }
+
+                        item.level = '<div class="label label-' + levelLabel + '">' + item.Level + '</div>';
+                    });
+
+                    if (isLoadMore) {
+                        currentItems = currentItems.concat(items);
+                    } else {
+                        currentItems = items;
+                    }
+
+                    if (data.Token) {
+                        $("#loadMore").show();
+                    } else {
+                        $("#loadMore").hide();
+                    }
+
+                    $('#logBrowser').dataTable({
+                        "destroy": "true",
+                        "data": currentItems,
+                        "paging": true,
+                        "searching": true,
+                        "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
+                        "order": [[ 6, "desc" ], [ 2, 'desc' ]],
+                        "autoWidth": false,
+                        "columns": [
+                            {
+                                "width": "150px",
+                                "data": "date"
+                            },
+                            { "data": "level" },
+                            {
+                                "data": "RowKey",
+                                "visible": false
+                            },
+                            { "data": "InstanceId" },
+                            { "data": "ActivityId" },
+                            { "data": "Message" },
+                            {
+                                "data": "Timestamp",
+                                "visible": false
+                            }
+                        ]
+                    });
+                }, "json");
+            }
+
+            function updateDateRange(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY LT') + ' - ' + end.format('MMMM D, YYYY LT'));
+                refresh('api/logtable?from=' + start.format() + '&to=' + end.format());
+            }
+
+            $("#loadMore").click(function() {
+                refresh(null, true);
+            });
+
+            $(document).ready(function () {
+                $('#reportrange').daterangepicker(
+                    {
+                        ranges: {
+                            'Today': [moment().minute(0).hour(0), moment().minute(0)],
+                            'Yesterday': [moment().subtract('days', 2).minute(0).hour(0), moment().subtract('days', 1).minute(0).hour(0)],
+                            'Last 7 Days': [moment().subtract('days', 6).minute(0).hour(0), moment().minute(0)],
+                            'Last 30 Days': [moment().subtract('days', 29).minute(0).hour(0), moment().minute(0)],
+                            'This Month': [moment().startOf('month').minute(0).hour(0), moment().endOf('month').minute(0)],
+                            'Last Month': [moment().subtract('month', 1).startOf('month').minute(0).hour(0), moment().subtract('month', 1).endOf('month').minute(0)]
+                        },
+                        timePicker: true,
+                        timePickerIncrement: 60,
+                        startDate: moment(),
+                        endDate: moment()
+                    },
+                    updateDateRange
+                );
+
+                updateDateRange(moment().minute(0).hour(0), moment().minute(0));
+            });
+        </script>
+    </body>
+</html>

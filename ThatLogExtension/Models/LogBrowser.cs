@@ -14,6 +14,11 @@ namespace ThatLogExtension.Models
 
         public abstract Task<Stream> GetStreamForDownloadAsync(string path);
 
+        public virtual string BuildExternalUrl()
+        {
+            return null;
+        }
+
         public string Name { get; private set; }
     }
 }

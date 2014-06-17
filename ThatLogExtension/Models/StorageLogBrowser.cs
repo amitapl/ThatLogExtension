@@ -4,9 +4,8 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.WindowsAzure.Storage.Blob;
-using ThatLogExtension.Models;
 
-namespace ThatLogExtensions.Models
+namespace ThatLogExtension.Models
 {
     public class StorageLogBrowser : LogBrowser
     {

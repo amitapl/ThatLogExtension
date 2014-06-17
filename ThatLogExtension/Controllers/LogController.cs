@@ -9,7 +9,6 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
 using ThatLogExtension.Models;
-using ThatLogExtensions.Models;
 
 namespace ThatLogExtension.Controllers
 {
@@ -27,15 +26,23 @@ namespace ThatLogExtension.Controllers
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
 
             AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
+            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", tableStorage: true);
             AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
         }
 
-        private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName)
+        private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName, bool tableStorage = false)
         {
             var sasUrl = ConfigurationManager.AppSettings[environmentVariableKey];
             if (sasUrl != null)
             {
-                logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, sasUrl));
+                if (!tableStorage)
+                {
+                    logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, sasUrl));
+                }
+                else
+                {
+                    logBrowsers.Add(logBrowserKey, new TableStorageLogBrowser(logBrowserName));
+                }
             }
         }
 
@@ -62,7 +69,8 @@ namespace ThatLogExtension.Controllers
                         {
                             Name = keyValuePair.Value.Name,
                             IsDirectory = true,
-                            Url = Request.RequestUri.AbsolutePath + "?type=" + keyValuePair.Key + "&path=/"
+                            Url = Request.RequestUri.AbsolutePath + "?type=" + keyValuePair.Key + "&path=/",
+                            ExternalUrl = keyValuePair.Value.BuildExternalUrl()
                         })
                     });
             }

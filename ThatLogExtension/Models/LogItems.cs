@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ThatLogExtensions.Models;
 
 namespace ThatLogExtension.Models
 {
