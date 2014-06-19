@@ -4,8 +4,17 @@
 }
 
 body {
+    padding-top: 120px;
+    padding-bottom: 20px;
     height: 100%;
     min-height: 100%;
+}
+
+.navbar-brand,
+.navbar-nav li a {
+    line-height: 50px;
+    height: 50px;
+    padding-top: 0;
 }
 
 .pointer {
@@ -21,13 +30,9 @@ body {
 
 .line-numbers {
     word-wrap: normal;
-    height: calc(100% - 140px); /* IE9+ and future browsers */
-    height: -moz-calc(100% - 140px); /* Firefox */
-    height: -webkit-calc(100% - 140px); /* Chrome, Safari */
-}
-
-.header {
-    height: 100px;
+    height: calc(100% - 10px); /* IE9+ and future browsers */
+    height: -moz-calc(100% - 10px); /* Firefox */
+    height: -webkit-calc(100% - 10px); /* Chrome, Safari */
 }
 
 .highlight {

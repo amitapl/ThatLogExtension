@@ -3,12 +3,13 @@
   <metadata>
     <id>websitelogs</id>
     <title>Azure Web Site Logs Browser</title>
-    <version>1.2.2</version>
+    <version>1.3.1</version>
     <authors>Amit Apple</authors>
     <licenseUrl>http://opensource.org/licenses/Apache-2.0</licenseUrl>
     <projectUrl>https://github.com/amitapl/ThatLogExtension</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/amitapl/ThatLogExtension/master/ThatLogExtension/Content/images/logbrowser.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Site extension to allow viewing of log files both on file system and on Azure blob storage.</description>
+    <description>Site extension to allow viewing of log files on file system, Azure blob storage and Azure table storage.</description>
     <tags>logs siteextension</tags>
   </metadata>
   <files>

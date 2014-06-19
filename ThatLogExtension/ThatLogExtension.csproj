@@ -138,6 +138,7 @@
     <Content Include="Content\css\jquery.dataTables.css" />
     <Content Include="Content\css\thatlog.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\images\logbrowser.gif" />
     <Content Include="Content\images\sort_asc.png" />
     <Content Include="Content\images\sort_asc_disabled.png" />
     <Content Include="Content\images\sort_both.png" />
@@ -151,6 +152,7 @@
     <Content Include="Content\js\jquery-1.10.1.min.js" />
     <Content Include="Content\js\jquery.dataTables.js" />
     <Content Include="Content\js\thatlogextension.js" />
+    <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
