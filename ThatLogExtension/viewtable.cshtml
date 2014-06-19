@@ -81,7 +81,7 @@
                     var items = data.Items;
 
                     items.forEach(function (item) {
-                        item.date = '<!--' + item.EventTickCount + '--><div class="bold">' + moment(item.Timestamp).format('L LT') + '</div>';
+                        item.date = '<div class="bold">' + moment(item.Timestamp).format('L LT') + '</div>';
 
                         var levelLabel;
                         if (item.Level === 'Information') {
@@ -117,16 +117,21 @@
                         "paging": true,
                         "searching": true,
                         "lengthMenu": [[20, 50, 100, -1], [20, 50, 100, "All"]],
-                        "order": [[ 0, "asc" ], [ 2, "asc" ]],
+                        "order": [[ 3, "asc" ], [ 2, "asc" ], [ 0,  "asc" ]],
                         "autoWidth": false,
                         "columns": [
                             {
                                 "width": "150px",
+                                "orderData": [3, 2],
                                 "data": "date"
                             },
                             { "data": "level" },
                             {
                                 "data": "RowKey",
+                                "visible": false
+                            },
+                            {
+                                "data": "EventTickCount",
                                 "visible": false
                             },
                             { "data": "InstanceId" },
