@@ -56,7 +56,8 @@
                     </tr>
                 </thead>
             </table>
-            <button class="btn btn-primary" style="margin:20px" id="loadMore">Load More</button>
+            <img src="Content/ajax-loader.gif" id="loading-indicator" style="text-align: center" />
+            <p class="bg-warning text-center" id="loadMoreBg"><button class="btn btn-warning" style="margin:20px" id="loadMore">Load More</button></p>
         </div>
 
         <script src="Content/js/jquery-1.10.1.min.js"></script>
@@ -76,6 +77,8 @@
                 } else {
                     currentUrl = refreshUrl;
                 }
+
+                $("#loading-indicator").show();
 
                 $.get(refreshUrl, function (data) {
                     currentData = data;
@@ -107,9 +110,9 @@
                     }
 
                     if (data.Token) {
-                        $("#loadMore").show();
+                        $("#loadMoreBg").show();
                     } else {
-                        $("#loadMore").hide();
+                        $("#loadMoreBg").hide();
                     }
 
                     $('#logBrowser').dataTable({
@@ -140,6 +143,8 @@
                             { "data": "Message" }
                         ]
                     });
+
+                    $("#loading-indicator").hide();
                 }, "json");
             }
 
@@ -156,12 +161,13 @@
                 $('#reportrange').daterangepicker(
                     {
                         ranges: {
+                            'Past Hour': [moment().minute(0), moment().add('hours', 1).minute(0)],
+                            'Last 6 Hours': [moment().minute(0).subtract('hours', 5), moment().add('hours', 1).minute(0)],
+                            'Last 12 Hours': [moment().minute(0).subtract('hours', 11), moment().add('hours', 1).minute(0)],
                             'Today': [moment().minute(0).hour(0), moment().add('hours', 1).minute(0)],
                             'Yesterday': [moment().subtract('days', 2).minute(0).hour(0), moment().subtract('days', 1).minute(0).hour(0)],
                             'Last 7 Days': [moment().subtract('days', 6).minute(0).hour(0), moment().minute(0)],
-                            'Last 30 Days': [moment().subtract('days', 29).minute(0).hour(0), moment().minute(0)],
-                            'This Month': [moment().startOf('month').minute(0).hour(0), moment().endOf('month').minute(0)],
-                            'Last Month': [moment().subtract('month', 1).startOf('month').minute(0).hour(0), moment().subtract('month', 1).endOf('month').minute(0)]
+                            'Last 30 Days': [moment().subtract('days', 29).minute(0).hour(0), moment().minute(0)]
                         },
                         timePicker: true,
                         timePickerIncrement: 60,
