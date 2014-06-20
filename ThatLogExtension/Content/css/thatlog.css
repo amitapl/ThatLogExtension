@@ -30,9 +30,9 @@ body {
 
 .line-numbers {
     word-wrap: normal;
-    height: calc(100% - 10px); /* IE9+ and future browsers */
-    height: -moz-calc(100% - 10px); /* Firefox */
-    height: -webkit-calc(100% - 10px); /* Chrome, Safari */
+    height: calc(100% - 40px); /* IE9+ and future browsers */
+    height: -moz-calc(100% - 40px); /* Firefox */
+    height: -webkit-calc(100% - 40px); /* Chrome, Safari */
 }
 
 .highlight {

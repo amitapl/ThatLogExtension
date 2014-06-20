@@ -31,7 +31,20 @@
                     </ul>
                 </div>
             </div>
-
+            <div class="row">
+                <form class="form-horizontal" role="form" id="search-form">
+                    <div class="col-sm-offset-8 col-sm-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="text-search" placeholder="Search..." />
+                            <span class="input-group-btn">
+                                <button class="btn btn-default" type="submit">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
             <div class="row line-numbers">
                 <pre class="line-numbers"><code id="filecontent"></code></pre>
                 <img src="Content/ajax-loader.gif" id="loading-indicator" style="text-align: center" />
@@ -58,13 +71,15 @@
                 });
 
                 var url = getParameterByName('url');
-                $.get(url, function (data) {
-                    var langDetect = url.indexOf('.xml') >= 0 || url.indexOf('.htm') >= 0 ? 'language-markup' : 'language-python';
-                    $("#filecontent").text(data);
-                    $("#filecontent").addClass(langDetect);
-                    Prism.highlightAll();
-                    $('#loading-indicator').hide();
-                });
+                if (url) {
+                    $.get(url, function(data) {
+                        var langDetect = url.indexOf('.xml') >= 0 || url.indexOf('.htm') >= 0 ? 'language-markup' : 'language-python';
+                        $("#filecontent").text(data);
+                        $("#filecontent").addClass(langDetect);
+                        Prism.highlightAll();
+                        $('#loading-indicator').hide();
+                    });
+                }
             });
         </script>
     </body>
