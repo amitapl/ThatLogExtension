@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using Microsoft.Data.OData;
 using Microsoft.WindowsAzure.Storage.Auth;
 using Microsoft.WindowsAzure.Storage.Table;
+using Microsoft.WindowsAzure.Storage.Table.Protocol;
 using Newtonsoft.Json;
 using ThatLogExtension.Models;
 
@@ -37,6 +39,15 @@ namespace ThatLogExtension.Controllers
                     string sasSignature = sasUrl.Substring(parseIndex);
 
                     var tableClient = new CloudTableClient(new Uri(endpointAddress), new StorageCredentials(sasSignature));
+
+                    if (sasSignature.IndexOf("sv=2012-02-12", StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        tableClient.DefaultRequestOptions.PayloadFormat = TablePayloadFormat.AtomPub;
+                        var type = typeof(TableConstants);
+                        var field = type.GetField("ODataProtocolVersion", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                        field.SetValue(null, ODataVersion.V2);
+                    }
+
                     var table = tableClient.GetTableReference(tableName);
                     var tableQuery =
                         new TableQuery<EventEntity>()
