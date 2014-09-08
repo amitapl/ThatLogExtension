@@ -51,6 +51,7 @@
                         <th></th>
                         <th>Instance</th>
                         <th>Activity</th>
+                        <th>Context</th>
                         <th>Message</th>
                         <th></th>
                     </tr>
@@ -140,6 +141,7 @@
                             },
                             { "data": "InstanceId" },
                             { "data": "ActivityId" },
+                            { "data": "Context" },
                             { "data": "Message" }
                         ]
                     });
@@ -150,7 +152,7 @@
 
             function updateDateRange(start, end) {
                 $('#reportrange span').html(start.format('MMMM D, YYYY LT') + ' - ' + end.format('MMMM D, YYYY LT'));
-                refresh('api/logtable?from=' + start.format() + '&to=' + end.format());
+                refresh('api/logtable?from=' + encodeURIComponent(start.format()) + '&to=' + encodeURIComponent(end.format()));
             }
 
             $("#loadMore").click(function() {
