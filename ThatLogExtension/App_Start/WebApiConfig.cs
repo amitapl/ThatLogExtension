@@ -13,6 +13,12 @@ namespace ThatLogExtension
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "LogApi",
+                routeTemplate: "api/log",
+                defaults: new { controller = "log", path = "" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }

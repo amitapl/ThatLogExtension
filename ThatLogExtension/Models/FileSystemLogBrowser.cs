@@ -64,6 +64,16 @@ namespace ThatLogExtension.Models
                     logItems.Add(logItem);
                 }
 
+                var parentLogItem = new LogItem()
+                {
+                    IsDirectory = true,
+                    Date = DateTime.MaxValue,
+                    Name = "..",
+                    Url = baseAddress.Substring(0, baseAddress.LastIndexOf('/'))
+                };
+
+                logItems.Add(parentLogItem);
+
                 return logDirectory;
             }
 

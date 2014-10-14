@@ -7,7 +7,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>Azure Web Site Log Browser</title>
+        <title>@Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME") - Azure Web Site Log Browser - View Log</title>
         <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
         <link href="Content/css/prism.css" rel="stylesheet" />
@@ -33,7 +33,11 @@
             </div>
             <div class="row">
                 <form class="form-horizontal" role="form" id="search-form">
-                    <div class="col-sm-offset-8 col-sm-4">
+                    <div class="col-sm-8">
+                        <img src="Content/ajax-loader.gif" id="loading-indicator" style="display: inline;" />
+                        <h4 id="fileName" style="display: inline;"></h4>
+                    </div>
+                    <div class="col-sm-4">
                         <div class="input-group">
                             <input type="text" class="form-control" id="text-search" placeholder="Search..." />
                             <span class="input-group-btn">
@@ -47,7 +51,6 @@
             </div>
             <div class="row line-numbers">
                 <pre class="line-numbers"><code id="filecontent"></code></pre>
-                <img src="Content/ajax-loader.gif" id="loading-indicator" style="text-align: center" />
             </div>
         </div>
 
@@ -70,6 +73,7 @@
                     evt.preventDefault();
                 });
 
+                $('#fileName').text(getParameterByName('fileName'));
                 var url = getParameterByName('url');
                 if (url) {
                     $.get(url, function(data) {

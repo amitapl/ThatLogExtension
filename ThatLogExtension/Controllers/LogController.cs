@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.UI.WebControls.WebParts;
 using ThatLogExtension.Models;
 
 namespace ThatLogExtension.Controllers
@@ -56,8 +57,18 @@ namespace ThatLogExtension.Controllers
             }
         }
 
-        public HttpResponseMessage Get(string type, string path)
+        public HttpResponseMessage Get(string path)
         {
+            string itemPath;
+            string type = ExtractTypeFromPath(path, out itemPath);
+
+            string urlPath = Request.RequestUri.AbsolutePath.Trim('/');
+            int hashIndex = urlPath.IndexOf('#');
+            if (hashIndex > 0)
+            {
+                urlPath = urlPath.Remove(hashIndex);
+            }
+
             if (String.IsNullOrEmpty(type))
             {
                 return Request.CreateResponse(
@@ -69,7 +80,7 @@ namespace ThatLogExtension.Controllers
                         {
                             Name = keyValuePair.Value.Name,
                             IsDirectory = true,
-                            Url = Request.RequestUri.AbsolutePath + "?type=" + keyValuePair.Key + "&path=/",
+                            Url = urlPath + "?path=/" + keyValuePair.Key,
                             ExternalUrl = keyValuePair.Value.BuildExternalUrl()
                         })
                     });
@@ -81,29 +92,52 @@ namespace ThatLogExtension.Controllers
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK, logBrowser.GetLogItem(Request.RequestUri.ToString(), path));
+            string uriPath = Request.RequestUri.ToString();
+            int hashIndex2 = uriPath.IndexOf('#');
+            {
+            if (hashIndex2 > 0)
+                uriPath = uriPath.Remove(hashIndex2);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK, logBrowser.GetLogItem(urlPath + "?path=" + path, itemPath));
         }
 
         [HttpGet]
-        public async Task<HttpResponseMessage> Download(string type, string path, bool download)
+        public async Task<HttpResponseMessage> Download(string path, bool download)
         {
+            string itemPath;
+            string type = ExtractTypeFromPath(path, out itemPath);
+
             ILogBrowser logBrowser;
             if (!LogBrowsers.TryGetValue(type, out logBrowser))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
 
-            Stream stream = await logBrowser.GetStreamForDownloadAsync(path);
+            Stream stream = await logBrowser.GetStreamForDownloadAsync(itemPath);
 
             var result = new HttpResponseMessage(HttpStatusCode.OK);
             result.Content = new StreamContent(stream);
             result.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             result.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment")
             {
-                FileName = Path.GetFileName(path)
+                FileName = Path.GetFileName(itemPath)
             };
 
             return result;
+        }
+
+        private static string ExtractTypeFromPath(string path, out string itemPath)
+        {
+            string type = null;
+            itemPath = null;
+            if (path != null)
+            {
+                var parts = path.Split(new char[] { '/' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                type = parts.Length > 0 ? parts[0] : null;
+                itemPath = parts.Length > 1 ? parts[1] : null;
+            }
+            return type;
         }
     }
 }

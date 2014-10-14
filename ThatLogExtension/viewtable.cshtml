@@ -7,7 +7,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>Azure Web Site Log Browser</title>
+        <title>@Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME") - Azure Web Site Log Browser - View Table</title>
         <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
         <link href="Content/css/daterangepicker-bs3.css" rel="stylesheet" />
@@ -85,7 +85,7 @@
                     var items = data.Items;
 
                     items.forEach(function (item) {
-                        item.date = '<div class="bold">' + moment(item.Timestamp).format('L LT') + '</div>';
+                        item.date = '<div class="bold">' + moment(item.Timestamp).format('DD MMM YYYY HH:mm') + '</div>';
 
                         var levelLabel;
                         if (item.Level === 'Information') {
@@ -149,6 +149,7 @@
             }
 
             function updateDateRange(start, end) {
+                window.location.hash = '#' + start.format() + '&' + end.format();
                 $('#reportrange span').html(start.format('MMMM D, YYYY LT') + ' - ' + end.format('MMMM D, YYYY LT'));
                 refresh('api/logtable?from=' + encodeURIComponent(start.format()) + '&to=' + encodeURIComponent(end.format()));
             }
@@ -176,6 +177,15 @@
                     },
                     updateDateRange
                 );
+
+                var hash = window.location.hash;
+                if (hash) {
+                    var times = hash.substring(1).split("&", 2);
+                    if (times && times.length == 2) {
+                        updateDateRange(moment(times[0]), moment(times[1]));
+                        return;
+                    }
+                }
 
                 updateDateRange(moment().minute(0).hour(0), moment().add('hours', 1).minute(0));
             });

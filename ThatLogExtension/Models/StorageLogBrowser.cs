@@ -32,6 +32,7 @@ namespace ThatLogExtension.Models
             }
 
             path = path.TrimStart('/');
+            baseAddress = baseAddress.TrimEnd('/');
 
             var blobContainer = new CloudBlobContainer(new Uri(_sasUrl));
 
@@ -63,8 +64,8 @@ namespace ThatLogExtension.Models
                             Size = cloudBlockBlob.Properties.Length,
                             Path = path + innerName,
                             Date = cloudBlockBlob.Properties.LastModified.HasValue ? (DateTime?)cloudBlockBlob.Properties.LastModified.Value.DateTime : null,
-                            Url = baseAddress + innerName,
-                            DownloadUrl = baseAddress + innerName + "&download=true"
+                            Url = baseAddress + "/" + innerName,
+                            DownloadUrl = baseAddress + "/" + innerName + "&download=true"
                         });
                     }
                     else if (blob is CloudBlobDirectory)
@@ -77,10 +78,20 @@ namespace ThatLogExtension.Models
                             IsDirectory = true,
                             Name = innerName,
                             Path = innerPath,
-                            Url = baseAddress + innerName + "/"
+                            Url = baseAddress + "/" + innerName + "/"
                         });
                     }
                 }
+
+                var parentLogItem = new LogItem()
+                {
+                    IsDirectory = true,
+                    Date = DateTime.MaxValue,
+                    Name = "..",
+                    Url = baseAddress.Substring(0, baseAddress.LastIndexOf('/')) + "/"
+                };
+
+                logItems.Add(parentLogItem);
 
                 return logDirectory;
             }

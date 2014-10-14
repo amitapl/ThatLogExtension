@@ -7,7 +7,7 @@
 <html>
     <head>
         <meta name="viewport" content="width=device-width" />
-        <title>Azure Web Site Log Browser</title>
+        <title>@Environment.GetEnvironmentVariable("WEBSITE_SITE_NAME") - Azure Web Site Log Browser</title>
         <link rel="stylesheet" href="Content/css/bootstrap.css" type="text/css" />
         <link rel="stylesheet" href="Content/css/jquery.dataTables.css" type="text/css" />
         <link href="Content/css/thatlog.css" rel="stylesheet" />
@@ -62,11 +62,12 @@
             };
 
             function refresh(refreshUrl, historyCall) {
+                window.location.hash = '#' + refreshUrl.replace('api/log?path=', '');
+
                 if (!historyCall) {
                     var stateObj = { refreshUrl: refreshUrl };
 
                     if (!firstUrl) {
-                        firstUrl = refreshUrl;
                         history.replaceState(stateObj, null, null);
                     } else {
                         history.pushState(stateObj, null, null);
@@ -79,25 +80,22 @@
 
                     var items = data.Items;
 
-                    if (firstUrl != refreshUrl) {
-                        items.unshift({ Name: "..", Date: new Date( 100000000*86400000), IsDirectory: true, Size: null });
-                    }
-
                     items.forEach(function (item) {
                         item.Date = item.Date || null;
                         item.date = item.Name !== ".." && item.Date ? moment(item.Date).format('L LT') : null;
+                        item.size = item.Name !== ".." ? item.Size : null;
                         if (item.IsDirectory) {
-                            var icon1 = '<i class="glyphicon glyphicon-folder-open yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            var onclickurl = item.Name !== '..' ? 'onclick="refresh(\'' + item.Url + '\');"' : 'onclick="goBack();"';
+                            var icon1 = '<i class="glyphicon glyphicon-folder-open yellow"></i>';
+                            var onclickurl = 'onclick="refresh(\'' + item.Url + '\');"';
                             if (item.ExternalUrl) {
-                                item.name = icon1 + '<a id="directoryLink" class="pointer" href="' + item.ExternalUrl + '">' + item.Name + '</a>';
+                                item.name = '<a id="directoryLink" class="pointer" href="' + item.ExternalUrl + '">' + icon1 + '</a>&nbsp;&nbsp;&nbsp;&nbsp;' + '<a id="directoryLink" class="pointer" href="' + item.ExternalUrl + '">' + item.Name + '</a>';
                             } else {
-                                item.name = icon1 + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</a>';
+                                item.name = '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + icon1 + '</a>&nbsp;&nbsp;&nbsp;&nbsp;' + '<a id="directoryLink" class="pointer" ' + onclickurl + '>' + item.Name + '</a>';
                             }
-                            item.downloadUrl = null;
+                            item.downloadUrl = '';
                         } else {
                             var icon2 = '<i class="glyphicon glyphicon-file yellow"></i>&nbsp;&nbsp;&nbsp;&nbsp;';
-                            item.name = icon2 + '<a href="viewlog.cshtml?url=' + encodeURIComponent(item.DownloadUrl) + '" >' + item.Name + '</a>';
+                            item.name = icon2 + '<a href="viewlog.cshtml?url=' + encodeURIComponent(item.DownloadUrl) + '&fileName=' + item.Name + '" >' + item.Name + '</a>';
                             item.downloadUrl = '<a href="' + item.DownloadUrl + '"><i class="glyphicon glyphicon-download-alt"></i></a>';
                         }
                     });
@@ -114,6 +112,7 @@
                                 "orderable": false
                             },
                             {
+                                "width": "0px",
                                 "data": "Date",
                                 "visible": false
                             },
@@ -126,7 +125,7 @@
                                 "orderable": false
                             },
                             {
-                                "data": "Size",
+                                "data": "size",
                                 "orderable": false
                             }
                         ]
@@ -135,7 +134,12 @@
             }
 
             $(document).ready(function () {
-                refresh('api/log?type=&path=');
+                var hash = window.location.hash;
+                if (hash) {
+                    refresh('api/log?path=' + hash.substring(1));
+                } else {
+                    refresh('api/log?path=');
+                }
             });
         </script>
     </body>
