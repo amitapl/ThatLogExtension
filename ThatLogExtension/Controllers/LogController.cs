@@ -62,7 +62,7 @@ namespace ThatLogExtension.Controllers
             string itemPath;
             string type = ExtractTypeFromPath(path, out itemPath);
 
-            string urlPath = Request.RequestUri.AbsolutePath.Trim('/');
+            string urlPath = Request.RequestUri.AbsolutePath.TrimEnd('/');
             int hashIndex = urlPath.IndexOf('#');
             if (hashIndex > 0)
             {
@@ -90,13 +90,6 @@ namespace ThatLogExtension.Controllers
             if (!LogBrowsers.TryGetValue(type, out logBrowser))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
-            }
-
-            string uriPath = Request.RequestUri.ToString();
-            int hashIndex2 = uriPath.IndexOf('#');
-            {
-            if (hashIndex2 > 0)
-                uriPath = uriPath.Remove(hashIndex2);
             }
 
             return Request.CreateResponse(HttpStatusCode.OK, logBrowser.GetLogItem(urlPath + "?path=" + path, itemPath));

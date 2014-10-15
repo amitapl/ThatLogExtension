@@ -62,7 +62,7 @@
             };
 
             function refresh(refreshUrl, historyCall) {
-                window.location.hash = '#' + refreshUrl.replace('api/log?path=', '');
+                window.location.hash = '#' + refreshUrl.substring(refreshUrl.indexOf('api/log?path=') + 'api/log?path='.length);
 
                 if (!historyCall) {
                     var stateObj = { refreshUrl: refreshUrl };

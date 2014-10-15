@@ -211,7 +211,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>10366</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:10366/</IISUrl>
+          <IISUrl>http://localhost:10366/log/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
