@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,22 +14,31 @@ using ThatLogExtension.Models;
 
 namespace ThatLogExtension.Controllers
 {
-    public class LogController : ApiController
+    public sealed class LogController : ApiController
     {
-        private static readonly Dictionary<string, ILogBrowser> LogBrowsers = new Dictionary<string, ILogBrowser>(StringComparer.InvariantCultureIgnoreCase);
+        private static Dictionary<string, ILogBrowser> _logBrowsers;
 
         static LogController()
         {
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "c:\\temp", "filesystemtemp", "File System - Temp");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Application", "filesystemapplication", "File System - Application Logs");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\http\\RawLogs", "filesystemhttp", "File System - HTTP Logs");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\DetailedErrors", "detailederrors", "IIS Detailed Errors");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\kudu\\trace", "filesystemkudu", "File System - Kudu Logs");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
+            RefreshLogBrowsersList();
+        }
 
-            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
-            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", tableStorage: true);
-            AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
+        private static void RefreshLogBrowsersList()
+        {
+            var logBrowsers = new Dictionary<string, ILogBrowser>(StringComparer.InvariantCultureIgnoreCase);
+
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "c:\\temp", "filesystemtemp", "File System - Temp");
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\Application", "filesystemapplication", "File System - Application Logs");
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\http\\RawLogs", "filesystemhttp", "File System - HTTP Logs");
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\DetailedErrors", "detailederrors", "IIS Detailed Errors");
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\kudu\\trace", "filesystemkudu", "File System - Kudu Logs");
+            AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
+            
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", tableStorage: true);
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
+
+            _logBrowsers = logBrowsers;
         }
 
         private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName, bool tableStorage = false)
@@ -50,7 +60,6 @@ namespace ThatLogExtension.Controllers
         private static void AddFileSystemLogBrowserBasedOnExistance(Dictionary<string, ILogBrowser> logBrowsers, string fileSystemPath, string logBrowserKey, string logBrowserName)
         {
             fileSystemPath = Path.Combine(Environment.ExpandEnvironmentVariables("%HOME%"), fileSystemPath);
-
             if (Directory.Exists(fileSystemPath))
             {
                 logBrowsers.Add(logBrowserKey, new FileSystemLogBrowser(logBrowserName, fileSystemPath));
@@ -59,6 +68,8 @@ namespace ThatLogExtension.Controllers
 
         public HttpResponseMessage Get(string path)
         {
+            var logBrowsers = _logBrowsers;
+
             string itemPath;
             string type = ExtractTypeFromPath(path, out itemPath);
 
@@ -71,12 +82,13 @@ namespace ThatLogExtension.Controllers
 
             if (String.IsNullOrEmpty(type))
             {
+                RefreshLogBrowsersList();
                 return Request.CreateResponse(
                     HttpStatusCode.OK,
                     new LogItems()
                     {
                         IsDirectory = true,
-                        Items = LogBrowsers.Select(keyValuePair => new LogItem()
+                        Items = logBrowsers.Select(keyValuePair => new LogItem()
                         {
                             Name = keyValuePair.Value.Name,
                             IsDirectory = true,
@@ -87,7 +99,7 @@ namespace ThatLogExtension.Controllers
             }
 
             ILogBrowser logBrowser;
-            if (!LogBrowsers.TryGetValue(type, out logBrowser))
+            if (!logBrowsers.TryGetValue(type, out logBrowser))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
@@ -98,11 +110,12 @@ namespace ThatLogExtension.Controllers
         [HttpGet]
         public async Task<HttpResponseMessage> Download(string path, bool download)
         {
+            var logBrowsers = _logBrowsers;
             string itemPath;
             string type = ExtractTypeFromPath(path, out itemPath);
 
             ILogBrowser logBrowser;
-            if (!LogBrowsers.TryGetValue(type, out logBrowser))
+            if (!logBrowsers.TryGetValue(type, out logBrowser))
             {
                 return Request.CreateResponse(HttpStatusCode.NotFound);
             }
