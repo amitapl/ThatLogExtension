@@ -23,7 +23,7 @@ namespace ThatLogExtension.Controllers
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Application", "filesystemapplication", "File System - Application Logs");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\http\\RawLogs", "filesystemhttp", "File System - HTTP Logs");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\DetailedErrors", "detailederrors", "IIS Detailed Errors");
-            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\Git\\trace", "filesystemkudu", "File System - Kudu Logs");
+            AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles\\kudu\\trace", "filesystemkudu", "File System - Kudu Logs");
             AddFileSystemLogBrowserBasedOnExistance(LogBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
 
             AddStorageLogBrowserBasedOnEnvironment(LogBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
