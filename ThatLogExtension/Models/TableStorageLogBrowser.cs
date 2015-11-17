@@ -6,9 +6,12 @@ namespace ThatLogExtension.Models
 {
     public class TableStorageLogBrowser : LogBrowser
     {
-        public TableStorageLogBrowser(string name)
+        private readonly string _externalUrl;
+
+        public TableStorageLogBrowser(string name, string externalUrl)
             : base(name)
         {
+            _externalUrl = externalUrl;
         }
 
         public override LogItem GetLogItem(string baseAddress, string path)
@@ -23,7 +26,7 @@ namespace ThatLogExtension.Models
 
         public override string BuildExternalUrl()
         {
-            return "viewtable.cshtml";
+            return _externalUrl;
         }
     }
 }

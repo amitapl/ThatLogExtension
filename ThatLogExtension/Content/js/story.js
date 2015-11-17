@@ -72,10 +72,12 @@ function join(names, joiner) {;
 }
 
 storyControllers.controller('StoriesCtrl', function ($scope, $state, $stateParams, $filter, ngTableParams, stories) {
+    $scope.loading = true;
+
     var change = false;
 
     var daterange = {};
-    daterange.startDate = $stateParams.startDate ? moment($stateParams.startDate) : moment().minute(0).hour(0);
+    daterange.startDate = $stateParams.startDate ? moment($stateParams.startDate) : moment().subtract('days', 7).minute(0).hour(0);
     daterange.endDate = $stateParams.endDate ? moment($stateParams.endDate) : moment().add('hours', 1).minute(0);
 
     $scope.daterange = daterange;
@@ -109,6 +111,8 @@ storyControllers.controller('StoriesCtrl', function ($scope, $state, $stateParam
     }
 
     stories.list(daterange, function (stories) {
+        $scope.loading = false;
+
         var items = stories.Items.map(function (story) {
             var item = {
                 date: dateFormat(story.StartDateTime),
@@ -144,6 +148,8 @@ storyControllers.controller('StoriesCtrl', function ($scope, $state, $stateParam
                 var orderedData = params.sorting() ?
                                     $filter('orderBy')(filteredData, params.orderBy()) :
                                     filteredData;
+
+                params.total(filteredData.length);
 
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             },

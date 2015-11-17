@@ -14,13 +14,15 @@
     </h4>
 </div>
 
-<p>
-    Global Search: <input class="form-control" type="text" ng-model="filter.$" />
-</p>
+<div class="row">
+    <div class="col col-sm-4 col-sm-offset-8">
+        Global Search: <input class="form-control" type="text" ng-model="filter.$" />
+    </div>
+</div>
 
 <div class="row">
     <div class="col-sm-12">
-        <table ng-table="tableParams" class="table" show-filter="true">
+        <table ng-table="tableParams" class="table" show-filter="false">
             <tr class="link" ng-repeat="story in $data" ui-sref="show-story({story: story})">
                 <td title="'Date'" sortable="'date'">
                     {{story.date}}
@@ -38,3 +40,15 @@
         </table>
     </div>
 </div>
+
+<div ng-if="loading" class="row">
+    <div class="col col-sm-offset-6 col-sm-1 center">
+        <img src="Content/ajax-loader.gif">
+    </div>
+</div>
+
+<p class="text-center" ng-if="canLoadMore">
+    <button class="btn btn-warning" on-click="loadMore">Load More</button>
+</p>
+
+<br />

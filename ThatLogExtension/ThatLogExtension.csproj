@@ -200,6 +200,7 @@
     <Content Include="viewtable.cshtml" />
     <Content Include="Content\js\jquery-1.10.1.min.map" />
     <Content Include="viewstory.cshtml" />
+    <None Include="Properties\PublishProfiles\storyuitest.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

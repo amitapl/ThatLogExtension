@@ -35,27 +35,27 @@ namespace ThatLogExtension.Controllers
             AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
 
             AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
-            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", tableStorage: true);
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", externalUrl: "viewtable.cshtml");
             AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
 
-            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "StoryTableStorage", "storiesapplication", "Stories - Table Storage", tableStorage: true);
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "StoryTableStorage", "storiesapplication", "Stories - Table Storage", externalUrl: "viewstory.cshtml");
 
             _logBrowsers = logBrowsers;
         }
 
-        private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName, bool tableStorage = false)
+        private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName, string externalUrl = null)
         {
             var setting = Utils.GetSetting(environmentVariableKey);
 
             if (setting != null)
             {
-                if (!tableStorage)
+                if (externalUrl == null)
                 {
                     logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, setting));
                 }
                 else
                 {
-                    logBrowsers.Add(logBrowserKey, new TableStorageLogBrowser(logBrowserName));
+                    logBrowsers.Add(logBrowserKey, new TableStorageLogBrowser(logBrowserName, externalUrl));
                 }
             }
         }
