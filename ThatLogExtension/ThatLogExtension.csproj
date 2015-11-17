@@ -21,6 +21,7 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -129,13 +130,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\css\angular-json-explorer.css" />
     <Content Include="Content\css\daterangepicker-bs3.css" />
     <Content Include="Content\css\prism.css" />
+    <Content Include="Content\css\json-formatter.min.css" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\jquery.dataTables.css" />
+    <Content Include="Content\css\angular-ui-tree.min.css" />
     <Content Include="Content\css\thatlog.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\logbrowser.gif" />
@@ -144,13 +148,21 @@
     <Content Include="Content\images\sort_both.png" />
     <Content Include="Content\images\sort_desc.png" />
     <Content Include="Content\images\sort_desc_disabled.png" />
+    <Content Include="Content\js\angular-json-explorer.min.js" />
+    <Content Include="Content\js\angular-ui-tree.min.js" />
     <Content Include="Content\js\daterangepicker.js" />
+    <Content Include="Content\js\ng-bs-daterangepicker.min.js" />
     <Content Include="Content\js\moment.min.js" />
     <Content Include="Content\js\prism.min.js" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
     <Content Include="Content\js\jquery-1.10.1.min.js" />
     <Content Include="Content\js\jquery.dataTables.js" />
+    <Content Include="Content\js\json-formatter.min.js" />
+    <Content Include="Content\js\angular-ui-router.min.js" />
+    <Content Include="stories.html" />
+    <Content Include="story.html" />
+    <Content Include="Content\js\story.js" />
     <Content Include="Content\js\thatlogextension.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -158,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Utils.cs" />
     <Compile Include="Models\EventEntity.cs" />
     <Compile Include="Controllers\LogTableController.cs" />
     <Compile Include="Controllers\LogController.cs" />
@@ -170,6 +183,7 @@
     <Compile Include="Models\StorageLogBrowser.cs" />
     <Compile Include="Models\LogItem.cs" />
     <Compile Include="Models\LogItems.cs" />
+    <Compile Include="Models\StoryTableEntity.cs" />
     <Compile Include="Models\TableStorageLogBrowser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -185,6 +199,7 @@
     <Content Include="viewlog.cshtml" />
     <Content Include="viewtable.cshtml" />
     <Content Include="Content\js\jquery-1.10.1.min.map" />
+    <Content Include="viewstory.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

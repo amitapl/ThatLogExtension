@@ -1,0 +1,26 @@
+﻿<div class="row">
+    <h3>
+        <span class="bold">Story - {{story.namesStr}} @ {{story.date}}</span>
+    </h3>
+</div>
+
+<h4>Data</h4>
+<div ng-repeat="data in story.data" class="row">
+    <div class="col col-sm-12">
+        <b>{{data.key}}</b> {{data.value}}
+    </div>
+</div>
+
+<hr />
+
+<h4>Logs</h4>
+<div ng-repeat="log in story.logs" class="row">
+    <div class="col col-sm-12">
+        <b>+{{(log.dateTime - story.startDateTime)}} ms</b> <span class="{{'label label-' + color(log.severity)}}">{{text(log.severity)}}</span> {{log.text}}
+    </div>
+</div>
+
+<hr />
+
+<h4>Story Explore</h4>
+<json-explorer data="story.story" collapsed="true"></json-explorer>

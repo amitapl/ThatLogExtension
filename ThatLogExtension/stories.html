@@ -1,0 +1,40 @@
+﻿<div class="row">
+    <h4>
+        <span class="bold">View Stories From Azure Table Storage</span>
+
+        <div id="reportrange" class="pull-right" type="daterange"
+             ng-model="daterange"
+             enableTimePicker="true"
+             ranges="ranges"
+             separator="/" style="margin-bottom: 40px; cursor: pointer">
+            <i class="glyphicon glyphicon-calendar"></i>
+            <span></span><b class="caret"></b>
+            <span>{{daterangeTitle}}</span>
+        </div>
+    </h4>
+</div>
+
+<p>
+    Global Search: <input class="form-control" type="text" ng-model="filter.$" />
+</p>
+
+<div class="row">
+    <div class="col-sm-12">
+        <table ng-table="tableParams" class="table" show-filter="true">
+            <tr class="link" ng-repeat="story in $data" ui-sref="show-story({story: story})">
+                <td title="'Date'" sortable="'date'">
+                    {{story.date}}
+                </td>
+                <td title="'Instance Id'">
+                    {{story.instanceId}}
+                </td>
+                <td title="'Name'" sortable="'name'">
+                    {{story.namesStr}}
+                </td>
+                <td title="'Duration'">
+                    {{story.story.elapsed}}
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

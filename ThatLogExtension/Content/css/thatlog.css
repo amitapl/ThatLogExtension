@@ -76,3 +76,7 @@ a:link {
 a:visited {
     color: black;
 }
+
+.link {
+    cursor: pointer;
+}

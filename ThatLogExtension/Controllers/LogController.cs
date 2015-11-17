@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -14,6 +13,7 @@ using ThatLogExtension.Models;
 
 namespace ThatLogExtension.Controllers
 {
+    [RoutePrefix("api/log")]
     public sealed class LogController : ApiController
     {
         private static Dictionary<string, ILogBrowser> _logBrowsers;
@@ -33,22 +33,25 @@ namespace ThatLogExtension.Controllers
             AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\DetailedErrors", "detailederrors", "IIS Detailed Errors");
             AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles\\kudu\\trace", "filesystemkudu", "File System - Kudu Logs");
             AddFileSystemLogBrowserBasedOnExistance(logBrowsers, "LogFiles", "filesystem", "File System - Log Files Directory");
-            
+
             AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZUREBLOBCONTAINERSASURL", "blobapplication", "Application Logs - Blob Storage");
             AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "DIAGNOSTICS_AZURETABLESASURL", "tableapplication", "Application Logs - Table Storage", tableStorage: true);
             AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "WEBSITE_HTTPLOGGING_CONTAINER_URL", "blobhttp", "HTTP Logs - Blob Storage");
+
+            AddStorageLogBrowserBasedOnEnvironment(logBrowsers, "StoryTableStorage", "storiesapplication", "Stories - Table Storage", tableStorage: true);
 
             _logBrowsers = logBrowsers;
         }
 
         private static void AddStorageLogBrowserBasedOnEnvironment(Dictionary<string, ILogBrowser> logBrowsers, string environmentVariableKey, string logBrowserKey, string logBrowserName, bool tableStorage = false)
         {
-            var sasUrl = ConfigurationManager.AppSettings[environmentVariableKey];
-            if (sasUrl != null)
+            var setting = Utils.GetSetting(environmentVariableKey);
+
+            if (setting != null)
             {
                 if (!tableStorage)
                 {
-                    logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, sasUrl));
+                    logBrowsers.Add(logBrowserKey, new StorageLogBrowser(logBrowserName, setting));
                 }
                 else
                 {
@@ -66,6 +69,8 @@ namespace ThatLogExtension.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("")]
         public HttpResponseMessage Get(string path)
         {
             var logBrowsers = _logBrowsers;
@@ -108,6 +113,7 @@ namespace ThatLogExtension.Controllers
         }
 
         [HttpGet]
+        [Route("")]
         public async Task<HttpResponseMessage> Download(string path, bool download)
         {
             var logBrowsers = _logBrowsers;
