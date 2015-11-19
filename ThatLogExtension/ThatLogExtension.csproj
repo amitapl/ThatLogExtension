@@ -130,10 +130,11 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\ajax-loader.gif" />
+    <Content Include="Content\css\ng-table.css" />
     <Content Include="Content\css\angular-json-explorer.css" />
     <Content Include="Content\css\daterangepicker-bs3.css" />
     <Content Include="Content\css\prism.css" />
-    <Content Include="Content\css\json-formatter.min.css" />
+    <Content Include="Content\css\json-formatter.css" />
     <Content Include="Content\css\bootstrap-theme.css" />
     <Content Include="Content\css\bootstrap-theme.min.css" />
     <Content Include="Content\css\bootstrap.css" />
@@ -150,9 +151,11 @@
     <Content Include="Content\images\sort_desc_disabled.png" />
     <Content Include="Content\js\angular-json-explorer.min.js" />
     <Content Include="Content\js\angular-ui-tree.min.js" />
+    <Content Include="Content\js\angular.min.js" />
     <Content Include="Content\js\daterangepicker.js" />
     <Content Include="Content\js\ng-bs-daterangepicker.min.js" />
     <Content Include="Content\js\moment.min.js" />
+    <Content Include="Content\js\ng-table.js" />
     <Content Include="Content\js\prism.min.js" />
     <Content Include="Content\js\bootstrap.js" />
     <Content Include="Content\js\bootstrap.min.js" />
@@ -212,11 +215,10 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VisualStudioVersion>14.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
   <ProjectExtensions>
